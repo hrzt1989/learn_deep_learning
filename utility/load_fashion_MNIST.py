@@ -1,8 +1,14 @@
 import torchvision
 from torchvision import transforms
-def get_fashion_MNST():
-    mnist_train = torchvision.datasets.FashionMNIST(root='~/Datasets/FashionMNIST', train=True, download=True, transform=transforms.ToTensor())
-    mnist_test = torchvision.datasets.FashionMNIST(root='~/Datasets/FashionMNIST', train=False, download=True, transform=transforms.ToTensor())
+def get_fashion_MNST(resize = None):
+    trans = []
+    if resize:
+        trans.append(torchvision.transforms.Resize(size=resize))
+    trans.append(torchvision.transforms.ToTensor())
+
+    transforms = torchvision.transforms.Compose(trans)
+    mnist_train = torchvision.datasets.FashionMNIST(root='~/Datasets/FashionMNIST', train=True, download=True, transform=transforms)
+    mnist_test = torchvision.datasets.FashionMNIST(root='~/Datasets/FashionMNIST', train=False, download=True, transform=transforms)
     return mnist_train, mnist_test
 
 

@@ -55,3 +55,27 @@ def train(train_data_iter,
         test_acc = evaluate_accuracy_v2(test_data_iter, net)
         net.train()
         print('epoch', epoch, 'train_acc', train_acc, 'test_acc', test_acc)
+
+
+def train_device(train_data_iter,
+                 test_data_iter,
+                 net,
+                 loss,
+                 num_epochs,
+                 trianing_davice,
+                 optimizer):
+    net = net.to(trianing_davice)
+    for epoch in range(num_epochs):
+        for x, y in train_data_iter:
+            x = x.to(trianing_davice)
+            y = y.to(trianing_davice)
+            y_hat = net(x)
+            loss_sum = loss(y_hat, y).sum()
+            optimizer.zero_grad()
+            loss_sum.backward()
+            optimizer.step()
+        net.eval()
+        train_acc = evaluate_accuracy_v2(train_data_iter, net, trianing_davice)
+        test_acc = evaluate_accuracy_v2(test_data_iter, net, trianing_davice)
+        net.train()
+        print('epoch', epoch, 'train_acc', train_acc, 'test_acc', test_acc)
