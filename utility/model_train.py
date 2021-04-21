@@ -61,16 +61,21 @@ def train_device(train_data_iter,
                  test_data_iter,
                  net,
                  loss,
+                 learn_rate,
                  num_epochs,
                  trianing_davice,
-                 optimizer):
+                 optimizer_name):
+    optm_func = getattr(optim, optimizer_name)
     net = net.to(trianing_davice)
+    optimizer = optm_func(net.parameters(), learn_rate)
     for epoch in range(num_epochs):
         for x, y in train_data_iter:
             x = x.to(trianing_davice)
             y = y.to(trianing_davice)
             y_hat = net(x)
-            loss_sum = loss(y_hat, y).sum()
+            loss_result = loss(y_hat, y)
+            loss_sum = loss_result.sum()
+            print('loss_sum', loss_sum)
             optimizer.zero_grad()
             loss_sum.backward()
             optimizer.step()

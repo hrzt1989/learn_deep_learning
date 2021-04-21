@@ -7,7 +7,7 @@ class AlexNet(nn.Module):
         self.convolutions = nn.Sequential(
             nn.Conv2d(1, 96, 11, 4),
             nn.ReLU(),
-            nn.MaxPool2d(3,2),
+            nn.MaxPool2d(3, 2),
 
             nn.Conv2d(96, 256, 5, 1, 2),
             nn.ReLU(),
@@ -21,7 +21,7 @@ class AlexNet(nn.Module):
 
             nn.Conv2d(384, 256, 3, 1, 1),
             nn.ReLU(),
-            nn.MaxPool2d(3,2)
+            nn.MaxPool2d(3, 2)
         )
         self.full_connections = nn.Sequential(
             nn.Linear(256 * 5 * 5, 4096),
@@ -45,8 +45,8 @@ if '__main__' == __name__:
     from utility.data_loader import data_loader
     from utility.model_train import train_device
 
-    batch_size = 256
-    lr = 0.01
+    batch_size = 128
+    lr = 0.001
     num_epoch = 5
 
     train_MNIST, test_MNIST = get_fashion_MNST(resize=224)
@@ -55,7 +55,7 @@ if '__main__' == __name__:
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     net = AlexNet()
-    optimizer = optim.Adam(net.parameters(), lr)
+    print(net)
 
-    train_device(train_data_iter, test_data_iter, AlexNet(), nn.CrossEntropyLoss(), num_epoch, device, optimizer)
+    train_device(train_data_iter, test_data_iter, AlexNet(), nn.CrossEntropyLoss(), lr, num_epoch, device, 'Adam')
 
