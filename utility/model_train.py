@@ -75,7 +75,6 @@ def train_device(train_data_iter,
             y_hat = net(x)
             loss_result = loss(y_hat, y)
             loss_sum = loss_result.sum()
-            print('loss_sum', loss_sum)
             optimizer.zero_grad()
             loss_sum.backward()
             optimizer.step()
