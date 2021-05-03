@@ -101,11 +101,12 @@ class RNN():
 
         state = self.init_state(batch_size, len(self.hidden_bias))
 
-        n = 0
+
         pred_period = 50
-        l_sum = 0
 
         for epoch in range(num_epoch):
+            n = 0
+            l_sum = 0
             start = time.time()
             data_iter = iter_func(corpus_chars_index, num_step, batch_size)
             for x, y in data_iter:
