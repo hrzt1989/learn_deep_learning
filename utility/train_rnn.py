@@ -46,7 +46,11 @@ def train_rnn(corpus_data,
                 if is_random_iter:
                     state = None
                 else:
-                    state.detach_()
+                    if isinstance(state, tuple):
+                        for one_state in state:
+                            one_state.detach_()
+                    else:
+                        state.detach_()
 
             y_hat, state = net(x, state)
             yy = torch.transpose(y, 0, 1).contiguous().view(-1)
