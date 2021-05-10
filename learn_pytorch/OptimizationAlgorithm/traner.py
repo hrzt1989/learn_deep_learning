@@ -21,7 +21,6 @@ def train(optimization_fun,
         for batch_i, (x, y) in enumerate(data_iter):
             y_hat = net(x)
             loss = loss_fun(y_hat, y)
-            print('loss', loss)
             params = net.parameters()
             for param in params:
                 if param.grad is not None:
@@ -60,7 +59,6 @@ def train_concise(optimization_name,
         for batch_i, (x, y) in enumerate(data_iter):
             y_hat = net(x)
             loss = loss_fun(y_hat, y.view(-1, 1))
-            print('loss', loss)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
