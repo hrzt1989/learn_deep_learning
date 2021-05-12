@@ -1,3 +1,4 @@
+from copy import deepcopy
 import numpy as np
 import time
 from torch.utils.data import TensorDataset, DataLoader
@@ -12,13 +13,20 @@ def train(optimization_fun,
           features,
           labels,
           batch_size = 10,
-          num_epoch = 2):
-
+          num_epoch = 2,
+          optim_name = None):
+    if optim_name:
+        new_net = deepcopy(net)
+        optim_func = getattr(optim, optim_name)
+        optiemer = optim_func(new_net.parameters())
     loss_list = [loss_fun(net(features).view(-1), labels).cpu().item()]
     data_iter = DataLoader(TensorDataset(features, labels), batch_size, shuffle=True)
     for epoch in range(num_epoch):
         start = time.time()
         for batch_i, (x, y) in enumerate(data_iter):
+            if optim_name:
+                params1 = list(net.parameters())
+                params2 = list(new_net.parameters())
             y_hat = net(x)
             loss = loss_fun(y_hat, y)
             params = net.parameters()
@@ -30,6 +38,15 @@ def train(optimization_fun,
 
             loss.backward()
             optimization_fun(net.parameters(), states, hyperparameter)
+            if optim_name:
+                y2_hat = new_net(x)
+                loss2 = loss_fun(y2_hat, y)
+                optiemer.zero_grad()
+                loss2.backward()
+                optiemer.step()
+                params1 = list(net.parameters())
+                params2 = list(new_net.parameters())
+
             if (batch_i + 1) * batch_size % 100 == 0:
                 loss_list.append(loss_fun(net(features), labels))
 
