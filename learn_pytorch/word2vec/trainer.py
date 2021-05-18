@@ -8,7 +8,8 @@ def train(data_iter,
           learn_rate,
           batch_size,
           optimizer_name,
-          device):
+          device,
+          show = False):
     net = net.to(device)
     optimfunc = getattr(optim, optimizer_name)
     optimizer = optimfunc(net.parameters(), learn_rate)
@@ -36,9 +37,9 @@ def train(data_iter,
             i += 1
             if i * batch_size % 100 == 0:
                 loss_result_list.append(current_result / (1 - beta ** i))
-
-    plt.plot(np.linspace(0, num_epoch, len(loss_result_list)), loss_result_list)
-    plt.xlabel('epoch')
-    plt.ylabel('loss')
-    plt.show()
+    if show:
+        plt.plot(np.linspace(0, num_epoch, len(loss_result_list)), loss_result_list)
+        plt.xlabel('epoch')
+        plt.ylabel('loss')
+        plt.show()
     return net

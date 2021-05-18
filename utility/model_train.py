@@ -67,7 +67,7 @@ def train_device(train_data_iter,
                  optimizer_name):
     optm_func = getattr(optim, optimizer_name)
     net = net.to(trianing_davice)
-    optimizer = optm_func(net.parameters(), learn_rate)
+    optimizer = optm_func(filter(lambda p: p.requires_grad, net.parameters()), learn_rate)
     for epoch in range(num_epochs):
         for x, y in train_data_iter:
             x = x.to(trianing_davice)
